@@ -87,8 +87,4 @@ Different lending partners, different risk appetite, zero code changes.
 - ML-based risk scoring model behind the rules engine (rules as guardrails, model as the score)
 - Multi-region event replication for disaster recovery
 
-## 📚 Why This Project Matters for SDE Roles (especially at Edgro)
-This one is close to a 1:1 match with Edgro's own language: "configurable, multi-tenant systems that flex as the business and partners' needs change," a "risk engine," and databases doing real modeling work. It also directly extends your existing Nexus Transaction Engine — same financial-correctness instincts, one layer up the stack.
 
----
-*This is a design spec / project blueprint — an implementation plan, not a claim of a built system, until executed.*
