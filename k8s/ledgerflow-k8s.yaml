@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ledgerflow
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ledgerflow-config
+  namespace: ledgerflow
+data:
+  APP_ENV: "production"
+  DATABASE_URL: "sqlite+aiosqlite:////data/ledgerflow.db"
+  EVENT_BUS_BACKEND: "in_process"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ledgerflow-backend
+  namespace: ledgerflow
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: ledgerflow-backend:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: ledgerflow-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: ledgerflow
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ledgerflow-frontend
+  namespace: ledgerflow
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ledgerflow-frontend:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: ledgerflow
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80
