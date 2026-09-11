@@ -1,0 +1,27 @@
+services:
+  # Backend FastAPI Service
+  - type: web
+    name: ledgerflow-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:///./ledgerflow.db
+      - key: EVENT_BUS_BACKEND
+        value: in_process
+
+  # Frontend React Service
+  - type: web
+    name: ledgerflow-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
